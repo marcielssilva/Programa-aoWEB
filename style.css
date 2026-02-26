@@ -1,128 +1,134 @@
 :root {
-    /* Cores do Modo Claro */
-    --bg-página: #e2e8f0;      /* Cinza azulado claro para o fundo da página */
-    --bg-tabuleiro: #ffffff;   /* Branco puro para o container do jogo */
-    --text-color: #1e293b;
+    --bg-página: #f8fafc;
+    --bg-tabuleiro: rgba(255, 255, 255, 0.8);
+    --text-color: #0f172a;
     --cell-bg: #ffffff;
-    --border-main: #0f172a;    /* Azul quase preto para bordas principais */
-    --invalid-color: #ef4444;  /* Vermelho vibrante para erros */
-    --fixed-cell-bg: #f1f5f9;  /* Cinza muito claro para números iniciais */
-    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    --btn-bg: #3b82f6;
-    --btn-text: #ffffff;
+    --border-main: #1e293b;
+    --invalid-color: #ff4d4d;
+    --fixed-cell-bg: #f1f5f9;
+    --accent-color: #3b82f6;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
 }
 
 [data-theme="dark"] {
-    /* Cores do Modo Noturno */
-    --bg-página: #0f172a;      /* Azul marinho profundo para o fundo */
-    --bg-tabuleiro: #1e293b;   /* Azul acinzentado para o container do jogo */
-    --text-color: #f8fafc;
+    --bg-página: #020617;
+    --bg-tabuleiro: rgba(30, 41, 59, 0.7);
+    --text-color: #f1f5f9;
     --cell-bg: #1e293b;
     --border-main: #94a3b8;
-    --invalid-color: #991b1b;  /* Vermelho escuro para erros */
-    --fixed-cell-bg: #0f172a;  /* Azul muito escuro para números iniciais */
-    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-    --btn-bg: #1d4ed8;
-    --btn-text: #f8fafc;
+    --invalid-color: #ef4444;
+    --fixed-cell-bg: #0f172a;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 body {
     background-color: var(--bg-página);
     color: var(--text-color);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    transition: background-color 0.4s ease;
-}
-
-.main-content {
-    display: flex;
-    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .container {
-    padding: 30px;
+    padding: 40px;
     background-color: var(--bg-tabuleiro);
-    border-radius: 12px;
+    backdrop-filter: blur(10px); /* Efeito de vidro */
+    border-radius: 24px;
     box-shadow: var(--shadow);
-    text-align: center;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-h1 { margin-top: 0; margin-bottom: 25px; font-size: 2.5rem; }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
 
-.controls { margin-bottom: 25px; }
+h1 { margin: 0; font-weight: 800; letter-spacing: -1px; }
 
-button {
-    padding: 10px 20px;
+.icon-controls { display: flex; gap: 12px; }
+
+.icon-btn {
+    background: var(--cell-bg);
+    border: 1px solid var(--border-main);
+    color: var(--text-color);
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
     cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    background-color: var(--btn-bg);
-    color: var(--btn-text);
-    margin: 0 5px;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-button:hover { opacity: 0.9; }
+.icon-btn:hover {
+    transform: translateY(-2px);
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
 
-/* O Grid do Sudoku */
 .grid {
     display: grid;
-    grid-template-columns: repeat(9, 45px);
-    grid-template-rows: repeat(9, 45px);
+    grid-template-columns: repeat(9, 50px);
+    grid-template-rows: repeat(9, 50px);
+    gap: 0; /* Usaremos bordas nas células */
     border: 3px solid var(--border-main);
-    background-color: var(--border-main); /* Cria as linhas internas */
-    gap: 1px; /* Espaço para as linhas internas */
-    width: max-content;
-    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--border-main);
 }
 
 .cell {
-    width: 45px;
-    height: 45px;
-    text-align: center;
-    font-size: 1.4rem;
-    border: none;
-    background-color: var(--cell-bg);
+    width: 50px;
+    height: 50px;
+    border: 0.1px solid rgba(148, 163, 184, 0.2);
+    background: var(--cell-bg);
     color: var(--text-color);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 500;
     outline: none;
-    transition: background-color 0.2s;
-    -moz-appearance: textfield; /* Remove setas no Firefox */
+    transition: all 0.15s ease;
 }
 
-/* Remove setas do input number */
-.cell::-webkit-outer-spin-button,
-.cell::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-/* Bordas dos quadrantes 3x3 */
-.cell:nth-child(3n) { border-right: 2px solid var(--border-main); }
+/* Divisões principais do Sudoku */
+.cell:nth-child(3n) { border-right: 3px solid var(--border-main); }
 .cell:nth-child(9n) { border-right: none; }
 .grid > .cell:nth-child(n+19):nth-child(-n+27),
 .grid > .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid var(--border-main);
+    border-bottom: 3px solid var(--border-main);
 }
 
 .cell.fixed {
     background-color: var(--fixed-cell-bg);
-    font-weight: 800;
-    color: #3b82f6; /* Azul para destacar números iniciais */
-    cursor: default;
-}
-
-[data-theme="dark"] .cell.fixed { color: #60a5fa; } /* Azul mais claro para o modo escuro */
-
-.cell.invalid {
-    background-color: var(--invalid-color) !important;
-    color: #ffffff;
+    color: var(--accent-color);
+    font-weight: 700;
 }
 
 .cell:focus {
-    background-color: #dbeafe; /* Destaque azul ao clicar */
+    background-color: #dbeafe;
+    box-shadow: inset 0 0 0 2px var(--accent-color);
 }
+
 [data-theme="dark"] .cell:focus { background-color: #334155; }
+
+.cell.invalid {
+    background-color: var(--invalid-color) !important;
+    color: white;
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}

@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku Minimalista</title>
+    <title>Sudoku Moderno</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Sudoku</h1>
-        
-        <div class="controls">
-            <button id="theme-toggle">Alternar Tema 🌓</button>
-            <button id="reset-btn">Reiniciar Jogo</button>
-        </div>
+        <header>
+            <h1>Sudoku</h1>
+            <div class="icon-controls">
+                <button id="theme-toggle" title="Alternar Tema" class="icon-btn">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <button id="reset-btn" title="Novo Jogo" class="icon-btn">
+                    <span>🔄</span>
+                </button>
+            </div>
+        </header>
 
         <div id="sudoku-board" class="grid">
             </div>

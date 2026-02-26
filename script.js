@@ -23,6 +23,7 @@ function fillBoard(board) {
     for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
             if (board[row][col] === 0) {
+                // Tenta números em ordem aleatória para gerar tabuleiros diferentes
                 let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
                 for (let num of nums) {
                     if (isValid(board, row, col, num)) {
@@ -39,7 +40,7 @@ function fillBoard(board) {
 }
 
 // Remove números para criar o desafio
-function pokeHoles(board, holes = 40) {
+function pokeHoles(board, holes = 45) {
     const newBoard = board.map(row => [...row]);
     let removed = 0;
     while (removed < holes) {
@@ -53,13 +54,10 @@ function pokeHoles(board, holes = 40) {
     return newBoard;
 }
 
-let currentSolution = [];
-
 function generateNewGame() {
     const fullBoard = createEmptyBoard();
-    fillBoard(fullBoard);
-    currentSolution = fullBoard.map(row => [...row]); // Salva a solução se quiser conferir depois
-    const gameBoard = pokeHoles(fullBoard, 45); // 45 espaços vazios (dificuldade média)
+    fillBoard(fullBoard); // Gera uma solução completa
+    const gameBoard = pokeHoles(fullBoard); // Cria o jogo com espaços vazios
     renderBoard(gameBoard);
 }
 
@@ -78,41 +76,42 @@ function renderBoard(board) {
                 input.readOnly = true;
                 input.classList.add('fixed');
             } else {
-                input.addEventListener('input', (e) => validateInput(e.target, board));
+                // Evento 'input' para validar todas as células a cada mudança
+                input.addEventListener('input', () => validateAllCells());
             }
             boardElement.appendChild(input);
         }
     }
 }
 
-function validateInput(cell) {
-    const row = parseInt(cell.dataset.row);
-    const col = parseInt(cell.dataset.col);
-    const val = parseInt(cell.value);
+// Valida todas as células para garantir que erros sumam se o conflito for resolvido
+function validateAllCells() {
+    const allCells = document.querySelectorAll('.cell');
+    
+    // Primeiro, limpa todos os erros
+    allCells.forEach(c => c.classList.remove('invalid'));
 
-    cell.classList.remove('invalid');
-
-    if (!val) return; // Se apagar o número, remove o vermelho
-
-    if (val < 1 || val > 9) {
-        cell.classList.add('invalid');
-        return;
-    }
-
-    // Validação em tempo real comparando com o que está na tela
-    if (hasConflict(row, col, val)) {
-        cell.classList.add('invalid');
-    }
+    // Depois, verifica conflitos célula por célula
+    allCells.forEach(cell => {
+        const val = parseInt(cell.value);
+        if (val) {
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            if (hasConflict(row, col, val)) {
+                cell.classList.add('invalid');
+            }
+        }
+    });
 }
 
 function hasConflict(row, col, val) {
-    const inputs = document.querySelectorAll('.cell');
+    const allCells = document.querySelectorAll('.cell');
     const boardState = Array.from({ length: 9 }, () => Array(9).fill(0));
     
     // Mapeia o estado atual dos inputs para uma matriz
-    inputs.forEach(input => {
-        const r = input.dataset.row;
-        const c = input.dataset.col;
+    allCells.forEach(input => {
+        const r = parseInt(input.dataset.row);
+        const c = parseInt(input.dataset.col);
         boardState[r][c] = parseInt(input.value) || 0;
     });
 
@@ -133,6 +132,25 @@ function hasConflict(row, col, val) {
     return false;
 }
 
+const themeIcon = document.getElementById('theme-icon');
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Altera o ícone de acordo com o tema
+    themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+});
+
+// Adicione uma pequena animação ao botão de reset
+resetBtn.addEventListener('click', () => {
+    resetBtn.style.transform = 'rotate(360deg)';
+    setTimeout(() => { resetBtn.style.transform = ''; }, 500);
+    generateNewGame();
+});
+
 // Alternar Modo Noturno
 themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -140,7 +158,7 @@ themeToggle.addEventListener('click', () => {
     document.documentElement.setAttribute('data-theme', newTheme);
 });
 
-// Botão Reiniciar agora gera um novo jogo
+// Botão Reiniciar gera um novo jogo
 resetBtn.addEventListener('click', generateNewGame);
 
 // Iniciar primeiro jogo
