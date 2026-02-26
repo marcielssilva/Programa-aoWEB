@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Minimalista</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sudoku</h1>
+        
+        <div id="grid" class="sudoku-grid"></div>
+
+        <div class="controls">
+            <div class="number-pad">
+                <button onclick="inputNumber(1)">1</button>
+                <button onclick="inputNumber(2)">2</button>
+                <button onclick="inputNumber(3)">3</button>
+                <button onclick="inputNumber(4)">4</button>
+                <button onclick="inputNumber(5)">5</button>
+                <button onclick="inputNumber(6)">6</button>
+                <button onclick="inputNumber(7)">7</button>
+                <button onclick="inputNumber(8)">8</button>
+                <button onclick="inputNumber(9)">9</button>
+                <button onclick="inputNumber(0)" class="erase">Apagar</button>
+            </div>
+            
+            <div class="actions">
+                <button id="new-game" onclick="resetGame()">Novo Jogo</button>
+                <button id="check-game" onclick="checkSolution()">Verificar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
