@@ -1,71 +1,83 @@
 :root {
     --bg-color: #f0f2f5;
-    --cell-size: 45px;
-    --border-thick: 3px solid #333;
-    --border-thin: 1px solid #ccc;
-    --selected: #bbdefb;
-    --fixed-text: #000;
-    --input-text: #1976d2;
+    --text-color: #333;
+    --cell-bg: #ffffff;
+    --border-color: #333;
+    --invalid-color: #ff4d4d;
+    --fixed-cell: #e0e0e0;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #f0f2f5;
+    --cell-bg: #2d2d2d;
+    --border-color: #ffffff;
+    --fixed-cell: #404040;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
     background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    transition: all 0.3s ease;
 }
 
 .container {
     text-align: center;
+    margin-top: 50px;
 }
 
-.sudoku-grid {
-    display: grid;
-    grid-template-columns: repeat(9, var(--cell-size));
-    grid-template-rows: repeat(9, var(--cell-size));
-    border: var(--border-thick);
-    background-color: white;
+.controls {
     margin-bottom: 20px;
 }
 
-.cell {
-    width: var(--cell-size);
-    height: var(--cell-size);
-    border: var(--border-thin);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
+button {
+    padding: 10px 15px;
     cursor: pointer;
-    user-select: none;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    margin: 5px;
 }
 
-/* Criando o efeito de quadrantes 3x3 */
-.cell:nth-child(3n) { border-right: var(--border-thick); }
-.cell:nth-child(9n) { border-right: var(--border-thin); }
-.cell:nth-child(n+19):nth-child(-n+27),
-.cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: var(--border-thick);
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-template-rows: repeat(9, 40px);
+    border: 2px solid var(--border-color);
+    width: max-content;
+    margin: 0 auto;
 }
 
-.cell.fixed { font-weight: bold; color: var(--fixed-text); background: #eee; }
-.cell.selected { background-color: var(--selected) !important; }
-.cell.input { color: var(--input-text); }
-
-.number-pad button {
+.cell {
     width: 40px;
     height: 40px;
-    margin: 5px;
-    cursor: pointer;
-    border: 1px solid #999;
-    border-radius: 4px;
-    background: white;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 0.5px solid #ccc;
+    background: var(--cell-bg);
+    color: var(--text-color);
+    outline: none;
 }
 
-.number-pad button.erase { width: 80px; background: #ffebee; }
-.actions { margin-top: 15px; }
-.actions button { padding: 10px 20px; cursor: pointer; }
+/* Bordas mais grossas para os quadrantes 3x3 */
+.cell:nth-child(3n) { border-right: 2px solid var(--border-color); }
+.cell:nth-child(9n) { border-right: 0.5px solid #ccc; } /* Reseta borda lateral direita da grade */
+.grid > .cell:nth-child(n+19):nth-child(-n+27),
+.grid > .cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid var(--border-color);
+}
+
+.cell.invalid {
+    background-color: var(--invalid-color) !important;
+    color: white;
+}
+
+.cell.fixed {
+    background-color: var(--fixed-cell);
+    font-weight: bold;
+    cursor: default;
+}
