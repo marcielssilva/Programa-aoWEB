@@ -1,7 +1,8 @@
-const gridElement = document.getElementById('grid');
-let selectedCell = null;
+const boardElement = document.getElementById('sudoku-board');
+const themeToggle = document.getElementById('theme-toggle');
+const resetBtn = document.getElementById('reset-btn');
 
-// Tabuleiro inicial (0 representa vazio)
+// Tabuleiro Inicial (0 representa espaço vazio)
 const initialBoard = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -14,51 +15,78 @@ const initialBoard = [
     [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ];
 
-function initBoard() {
-    gridElement.innerHTML = '';
-    for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            const val = initialBoard[row][col];
-            
-            if (val !== 0) {
-                cell.textContent = val;
-                cell.classList.add('fixed');
+function createBoard() {
+    boardElement.innerHTML = '';
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.classList.add('cell');
+            input.dataset.row = r;
+            input.dataset.col = c;
+
+            if (initialBoard[r][c] !== 0) {
+                input.value = initialBoard[r][c];
+                input.readOnly = true;
+                input.classList.add('fixed');
             } else {
-                cell.addEventListener('click', () => selectCell(cell));
+                input.addEventListener('input', (e) => validateInput(e.target));
             }
-            gridElement.appendChild(cell);
+            boardElement.appendChild(input);
         }
     }
 }
 
-function selectCell(cell) {
-    if (selectedCell) selectedCell.classList.remove('selected');
-    selectedCell = cell;
-    selectedCell.classList.add('selected');
-}
+function validateInput(cell) {
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
+    const val = parseInt(cell.value);
 
-function inputNumber(num) {
-    if (!selectedCell || selectedCell.classList.contains('fixed')) return;
-    
-    if (num === 0) {
-        selectedCell.textContent = '';
-        selectedCell.classList.remove('input');
-    } else {
-        selectedCell.textContent = num;
-        selectedCell.classList.add('input');
+    // Limpa erro anterior
+    cell.classList.remove('invalid');
+
+    if (isNaN(val) || val < 1 || val > 9) {
+        if (cell.value !== "") cell.classList.add('invalid');
+        return;
+    }
+
+    if (hasConflict(row, col, val)) {
+        cell.classList.add('invalid');
     }
 }
 
-function checkSolution() {
-    // Uma validação real exigiria comparar com a solução completa
-    // Aqui apenas damos um feedback visual simples de "preenchido"
-    alert("Boa tentativa! Para uma validação real, precisaríamos implementar o algoritmo de backtracking.");
+function hasConflict(row, col, val) {
+    const cells = document.querySelectorAll('.cell');
+    
+    for (let i = 0; i < 81; i++) {
+        const r = parseInt(cells[i].dataset.row);
+        const c = parseInt(cells[i].dataset.col);
+        const v = parseInt(cells[i].value);
+
+        if (v === val && (r !== row || c !== col)) {
+            // Mesma linha ou mesma coluna
+            if (r === row || c === col) return true;
+
+            // Mesmo quadrante 3x3
+            const startRow = Math.floor(row / 3) * 3;
+            const startCol = Math.floor(col / 3) * 3;
+            if (r >= startRow && r < startRow + 3 && c >= startCol && c < startCol + 3) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
-function resetGame() {
-    initBoard();
-}
+// Alternar Modo Noturno
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+});
 
-initBoard();
+// Reiniciar
+resetBtn.addEventListener('click', createBoard);
+
+// Iniciar Jogo
+createBoard();
