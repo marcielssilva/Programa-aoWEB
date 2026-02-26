@@ -1,30 +1,99 @@
-/* Efeito de destaque para a célula selecionada e seus vizinhos */
-.cell:focus {
-    background-color: var(--accent-light);
-    box-shadow: 0 0 15px var(--accent-color);
-    z-index: 10;
+:root {
+    --bg-page: #e2e8f0;      /* Fundo da página claro */
+    --bg-container: #ffffff; /* Fundo do tabuleiro branco */
+    --text-primary: #1e293b;
+    --cell-bg: #ffffff;
+    --cell-fixed-bg: #f8fafc;
+    --border-strong: #0f172a;
+    --accent: #3b82f6;
+    --error: #ef4444;
 }
 
-/* Melhoria no contraste do modo noturno */
-[data-theme="dark"] .cell.fixed {
-    color: #60a5fa;
-    background-color: rgba(15, 23, 42, 0.5);
+[data-theme="dark"] {
+    --bg-page: #020617;      /* Fundo da página escuro */
+    --bg-container: #1e293b; /* Fundo do tabuleiro azulado escuro */
+    --text-primary: #f8fafc;
+    --cell-bg: #1e293b;
+    --cell-fixed-bg: #0f172a;
+    --border-strong: #94a3b8;
+    --accent: #60a5fa;
+    --error: #991b1b;
 }
 
-/* Animação suave na troca de tema */
 body {
-    transition: background-color 0.5s ease, color 0.5s ease;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: background-color 0.4s;
 }
 
-/* Estilo para telas menores (Responsividade) */
-@media (max-width: 500px) {
-    .grid {
-        grid-template-columns: repeat(9, 35px);
-        grid-template-rows: repeat(9, 35px);
-    }
-    .cell {
-        width: 35px;
-        height: 35px;
-        font-size: 1.1rem;
-    }
+.container {
+    padding: 30px;
+    background-color: var(--bg-container);
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.icon-controls { display: flex; gap: 10px; }
+
+.icon-btn {
+    background: var(--cell-bg);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.icon-btn:hover { transform: scale(1.1); background: var(--accent); color: white; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, 45px);
+    grid-template-rows: repeat(9, 45px);
+    border: 3px solid var(--border-strong);
+    background-color: var(--border-strong);
+    gap: 1px;
+}
+
+.cell {
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: var(--cell-bg);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 1.3rem;
+    outline: none;
+}
+
+/* Bordas dos quadrantes 3x3 */
+.cell:nth-child(3n) { border-right: 2px solid var(--border-strong); }
+.cell:nth-child(9n) { border-right: none; }
+.grid > .cell:nth-child(n+19):nth-child(-n+27),
+.grid > .cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid var(--border-strong);
+}
+
+.cell.fixed { background-color: var(--cell-fixed-bg); font-weight: bold; color: var(--accent); }
+.cell.invalid { background-color: var(--error) !important; color: white; animation: shake 0.2s; }
+
+@keyframes shake {
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
 }
