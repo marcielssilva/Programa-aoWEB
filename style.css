@@ -1,74 +1,88 @@
 :root {
-    --bg-color: #f0f2f5;
-    --text-color: #333;
+    --bg-página: #e2e8f0;      /* Cinza azulado claro */
+    --bg-tabuleiro: #ffffff;   /* Branco puro para o grid */
+    --text-color: #1e293b;
     --cell-bg: #ffffff;
-    --border-color: #333;
-    --invalid-color: #ff4d4d;
-    --fixed-cell: #e0e0e0;
+    --border-main: #0f172a;    /* Azul quase preto */
+    --border-soft: #cbd5e1;
+    --invalid-color: #ef4444;  /* Vermelho vibrante */
+    --fixed-cell-bg: #f1f5f9;  /* Cinza muito claro para números fixos */
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --text-color: #f0f2f5;
-    --cell-bg: #2d2d2d;
-    --border-color: #ffffff;
-    --fixed-cell: #404040;
+    --bg-página: #0f172a;      /* Azul marinho profundo */
+    --bg-tabuleiro: #1e293b;   /* Azul acinzentado */
+    --text-color: #f8fafc;
+    --cell-bg: #1e293b;
+    --border-main: #94a3b8;
+    --border-soft: #334155;
+    --invalid-color: #991b1b;  /* Vermelho escuro */
+    --fixed-cell-bg: #0f172a;
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 body {
-    background-color: var(--bg-color);
+    background-color: var(--bg-página);
     color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     display: flex;
-    justify-content: center;
-    transition: all 0.3s ease;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: background-color 0.4s ease;
 }
 
 .container {
-    text-align: center;
-    margin-top: 50px;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: var(--bg-tabuleiro);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
 }
 
-.controls {
-    margin-bottom: 20px;
-}
+h1 { margin-bottom: 20px; }
 
-button {
-    padding: 10px 15px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background: #007bff;
-    color: white;
-    margin: 5px;
-}
-
+/* O Grid do Sudoku */
 .grid {
     display: grid;
-    grid-template-columns: repeat(9, 40px);
-    grid-template-rows: repeat(9, 40px);
-    border: 2px solid var(--border-color);
-    width: max-content;
-    margin: 0 auto;
+    grid-template-columns: repeat(9, 45px);
+    grid-template-rows: repeat(9, 45px);
+    border: 3px solid var(--border-main);
+    background-color: var(--border-main); /* Cria as linhas internas */
+    gap: 1px; 
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     text-align: center;
-    font-size: 1.2rem;
-    border: 0.5px solid #ccc;
+    font-size: 1.3rem;
+    border: none;
     background: var(--cell-bg);
     color: var(--text-color);
     outline: none;
+    transition: background-color 0.2s;
+    -moz-appearance: textfield; /* Remove setas no Firefox */
 }
 
-/* Bordas mais grossas para os quadrantes 3x3 */
-.cell:nth-child(3n) { border-right: 2px solid var(--border-color); }
-.cell:nth-child(9n) { border-right: 0.5px solid #ccc; } /* Reseta borda lateral direita da grade */
+/* Remove setas do input number */
+.cell::-webkit-outer-spin-button,
+.cell::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Bordas dos quadrantes 3x3 */
+.cell:nth-child(3n) { border-right: 2px solid var(--border-main); }
+.cell:nth-child(9n) { border-right: none; }
 .grid > .cell:nth-child(n+19):nth-child(-n+27),
 .grid > .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-main);
+}
+
+.cell.fixed {
+    background-color: var(--fixed-cell-bg);
+    font-weight: 800;
+    color: #3b82f6; /* Azul para destacar números iniciais */
 }
 
 .cell.invalid {
@@ -76,8 +90,7 @@ button {
     color: white;
 }
 
-.cell.fixed {
-    background-color: var(--fixed-cell);
-    font-weight: bold;
-    cursor: default;
+.cell:focus {
+    background-color: #dbeafe; /* Destaque azul ao clicar */
 }
+[data-theme="dark"] .cell:focus { background-color: #334155; }
