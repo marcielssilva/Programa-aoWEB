@@ -1,134 +1,30 @@
-:root {
-    --bg-página: #f8fafc;
-    --bg-tabuleiro: rgba(255, 255, 255, 0.8);
-    --text-color: #0f172a;
-    --cell-bg: #ffffff;
-    --border-main: #1e293b;
-    --invalid-color: #ff4d4d;
-    --fixed-cell-bg: #f1f5f9;
-    --accent-color: #3b82f6;
-    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-}
-
-[data-theme="dark"] {
-    --bg-página: #020617;
-    --bg-tabuleiro: rgba(30, 41, 59, 0.7);
-    --text-color: #f1f5f9;
-    --cell-bg: #1e293b;
-    --border-main: #94a3b8;
-    --invalid-color: #ef4444;
-    --fixed-cell-bg: #0f172a;
-    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-}
-
-body {
-    background-color: var(--bg-página);
-    color: var(--text-color);
-    font-family: 'Inter', -apple-system, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.container {
-    padding: 40px;
-    background-color: var(--bg-tabuleiro);
-    backdrop-filter: blur(10px); /* Efeito de vidro */
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-h1 { margin: 0; font-weight: 800; letter-spacing: -1px; }
-
-.icon-controls { display: flex; gap: 12px; }
-
-.icon-btn {
-    background: var(--cell-bg);
-    border: 1px solid var(--border-main);
-    color: var(--text-color);
-    width: 45px;
-    height: 45px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.2s;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.icon-btn:hover {
-    transform: translateY(-2px);
-    background-color: var(--accent-color);
-    color: white;
-    border-color: var(--accent-color);
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(9, 50px);
-    grid-template-rows: repeat(9, 50px);
-    gap: 0; /* Usaremos bordas nas células */
-    border: 3px solid var(--border-main);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: var(--border-main);
-}
-
-.cell {
-    width: 50px;
-    height: 50px;
-    border: 0.1px solid rgba(148, 163, 184, 0.2);
-    background: var(--cell-bg);
-    color: var(--text-color);
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 500;
-    outline: none;
-    transition: all 0.15s ease;
-}
-
-/* Divisões principais do Sudoku */
-.cell:nth-child(3n) { border-right: 3px solid var(--border-main); }
-.cell:nth-child(9n) { border-right: none; }
-.grid > .cell:nth-child(n+19):nth-child(-n+27),
-.grid > .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 3px solid var(--border-main);
-}
-
-.cell.fixed {
-    background-color: var(--fixed-cell-bg);
-    color: var(--accent-color);
-    font-weight: 700;
-}
-
+/* Efeito de destaque para a célula selecionada e seus vizinhos */
 .cell:focus {
-    background-color: #dbeafe;
-    box-shadow: inset 0 0 0 2px var(--accent-color);
+    background-color: var(--accent-light);
+    box-shadow: 0 0 15px var(--accent-color);
+    z-index: 10;
 }
 
-[data-theme="dark"] .cell:focus { background-color: #334155; }
-
-.cell.invalid {
-    background-color: var(--invalid-color) !important;
-    color: white;
-    animation: shake 0.3s;
+/* Melhoria no contraste do modo noturno */
+[data-theme="dark"] .cell.fixed {
+    color: #60a5fa;
+    background-color: rgba(15, 23, 42, 0.5);
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
+/* Animação suave na troca de tema */
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Estilo para telas menores (Responsividade) */
+@media (max-width: 500px) {
+    .grid {
+        grid-template-columns: repeat(9, 35px);
+        grid-template-rows: repeat(9, 35px);
+    }
+    .cell {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1rem;
+    }
 }
